@@ -4,49 +4,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../../utilities/ApiServices';
 import { RootState } from '../../redux/store'
 import { MaterialIndicator } from 'react-native-indicators';
-import { setLoader } from '../../redux/rootReducer';
+import { clearProductsLength, setLoader } from '../../redux/rootReducer';
 import Product from '../../components/Product';
 import { Search } from '../../components';
+import { debounce } from "lodash";
 
 
 const MyProducts = ({ }) => {
     const { products, productsLength, loader } = useSelector((state: RootState) => state.rootReducer)
     const dispatch = useDispatch();
     const [searchValue, setSearchValue] = useState('');
-    const [dataAfterFilter, setDataAfterFilter] = useState<any[]>([]);
 
     useEffect(() => {
         getProducts(dispatch);
     }, [])
 
-    useEffect(() => {
-        if (products.length != dataAfterFilter.length) {
-            setDataAfterFilter(products);
-        }
-    }, [products])
+    const getNewData = (e?: string) => {
+        dispatch(clearProductsLength())
+        getProducts(dispatch, e);
+    }
+
+    const handleNewDataWithDebounce = useCallback(debounce(getNewData, 1000), []);
 
     const handleLoadMore = (e: any) => {
-        if (!searchValue) {
-            dispatch(setLoader(true));
-            setTimeout(() => {
-                getProducts(dispatch);
-            }, 2000);
-        }
+        dispatch(setLoader(true));
+        setTimeout(() => getProducts(dispatch, searchValue), 1000);
     }
 
     const handleChangeText = useCallback((e: string) => {
         setSearchValue(e)
-        if (e.length > 2) {
-            const newData = products.slice().filter(ptoduct => ptoduct.productName.toUpperCase().includes(e.toUpperCase()))
-            setDataAfterFilter(newData);
-        } else {
-            setDataAfterFilter(products);
-
-        }
+        dispatch(setLoader(true));
+        handleNewDataWithDebounce(e);
     }, [searchValue])
 
     const onSearchClear = useCallback(() => {
-        setDataAfterFilter(products);
         setSearchValue('')
     }, [searchValue])
 
@@ -58,16 +49,16 @@ const MyProducts = ({ }) => {
                 onSearchClear={onSearchClear}
             />
             <FlatList
-                data={dataAfterFilter || []}
+                data={products || []}
                 horizontal={false}
                 columnWrapperStyle={styles.columnWrapperStyle}
-                onEndReached={e => !searchValue && !loader && productsLength != products.length && handleLoadMore(e)}
-                onEndReachedThreshold={0.3}
+                onEndReached={e => !loader && productsLength != products.length && handleLoadMore(e)}
+                onEndReachedThreshold={0.02}
                 ListFooterComponent={() => ((loader) ? <MaterialIndicator color='gray' /> : <View />)}
                 numColumns={2}
                 renderItem={(({ item }: any) => <Product item={item} />)}
                 keyExtractor={(item, index) => index.toString()}
-                ListEmptyComponent={() => <Text style={styles.noRes}>No-Results</Text>}
+                ListEmptyComponent={() => <Text style={styles.noRes}>{searchValue && loader ? <View /> : 'No-Results'}</Text>}
             />
             <View />
         </View >

@@ -5,13 +5,16 @@ const itemsPerReq = 6
 
 //GET 
 export const getProducts = (req, res) => {
-    const getNewProducts = products.slice(+req.params.len,
-        products.length < (+req.params.len + itemsPerReq)
-            ? products.length
+    const filterBy = req.params.filterBy
+    let dataAfterFilter = [];
+    dataAfterFilter = filterBy ? products.filter(product => product.productName.toUpperCase().includes(filterBy.toUpperCase())) : products;
+    const getNewProducts = dataAfterFilter.slice(+req.params.len,
+        dataAfterFilter.length < (+req.params.len + itemsPerReq)
+            ? dataAfterFilter.length
             : (+req.params.len + itemsPerReq));
     res.send({
         products: getNewProducts,
-        productsLength: products.length,
+        productsLength: dataAfterFilter.length,
     }
     )
 }

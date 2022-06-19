@@ -17,13 +17,20 @@ export const productsSlice = createSlice({
   initialState,
   reducers: {
     setProducts: (state: any, action: PayloadAction<any | null>) => {
-      state.products = [...state.products, ...action.payload.products];
-      if (!state.productsLength)
+      if (state.productsLength) {
+        state.products = [...state.products, ...action.payload.products];
+      } else {
+        state.products = action.payload.products;
+      }
+      if (!state.productsLength || state.productsLength !== action.payload.productsLength)
         state.productsLength = action.payload.productsLength;
       state.loader = false;
     },
     resetState: () => initialState,
 
+    clearProductsLength: (state: any) => {
+      state.productsLength = 0
+    },
     setLoader: (state: any, action: PayloadAction<boolean>) => {
       state.loader = action.payload;
     },
@@ -31,6 +38,6 @@ export const productsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setProducts, setLoader, resetState } = productsSlice.actions
+export const { setProducts, setLoader, resetState, clearProductsLength } = productsSlice.actions
 
 export default productsSlice.reducer
