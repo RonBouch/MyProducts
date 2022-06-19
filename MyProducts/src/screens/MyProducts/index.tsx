@@ -60,7 +60,7 @@ const MyProducts = ({ }) => {
             <FlatList
                 data={dataAfterFilter || []}
                 horizontal={false}
-                columnWrapperStyle={{ width: '100%', justifyContent: 'center' }}
+                columnWrapperStyle={styles.columnWrapperStyle}
                 onEndReached={e => !searchValue && !loader && productsLength != products.length && handleLoadMore(e)}
                 onEndReachedThreshold={0.3}
                 ListFooterComponent={() => ((loader) ? <MaterialIndicator color='gray' /> : <View />)}
@@ -93,5 +93,6 @@ const styles = StyleSheet.create({
         fontSize: 28,
         alignSelf: 'center',
         marginTop: 30,
-    }
+    },
+    columnWrapperStyle: { width: '100%', justifyContent: 'center' },
 });

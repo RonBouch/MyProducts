@@ -1,6 +1,6 @@
 import { useRoute } from '@react-navigation/native';
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -18,7 +18,7 @@ const ViewProduct = () => {
                     {product?.about}
                 </Text>
                 <View style={styles.bottomCon}>
-                    <TouchableOpacity onPress={() => { }} //TODO
+                    <TouchableOpacity onPress={() => { Linking.openURL('https://www.apple.com/store') }} //TODO
                         style={styles.btnCon}>
                         <Text style={styles.btnTxt}>Buy Now</Text>
                     </TouchableOpacity>

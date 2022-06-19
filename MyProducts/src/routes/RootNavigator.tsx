@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ViewProduct, MyProducts } from '../screens';
 import { SCREENS } from '../utilities/enums';
-import { Text, View } from 'react-native';
-// import { Header } from '../components';
-import Svg, { Path } from 'react-native-svg';
+import { Button, Text } from 'react-native';
 
 export type RootStack = StackNavigationProp<RootStackParam>;
 
@@ -18,18 +16,17 @@ export type RootStackParam = {
 const Stack = createNativeStackNavigator<RootStackParam>();
 
 
-const stackScreenOptions = (title: string, props: NativeStackScreenProps<RootStackParam>) => ({
-    headerMode: 'none',
-    headerShadowVisible: true,
-    header: () => (
-        <View style={{ alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
-            {/* <BackBtn /> */}
-            {/* <Header title={title?.toString()} {...props} /> */}
-            <Text>
-                {title}
-            </Text>
-
-        </View>
+const stackScreenOptions = (title: string) => ({
+    headerStyle: {
+        backgroundColor: 'rgb(243,243,242)',
+    },
+    headerTitle: () => <Text style={{ fontSize: 22 }}>{title}</Text>,
+    headerRight: () => (
+        <Button
+            onPress={() => { }}
+            title="Info"
+            color="#fff"
+        />
     ),
 })
 
@@ -38,8 +35,8 @@ export const RootNavigator = () => {
     return (
         <NavigationContainer  >
             <Stack.Navigator initialRouteName={SCREENS.Login} screenOptions={{ headerBackTitleVisible: false }}>
-                <Stack.Screen name={SCREENS.MyProducts} component={MyProducts} options={(props) => ({ ...stackScreenOptions("My-Products", props) })} />
-                <Stack.Screen name={SCREENS.ViewProduct} component={ViewProduct} options={(props) => ({ ...stackScreenOptions('View-Product', props) })} />
+                <Stack.Screen name={SCREENS.MyProducts} component={MyProducts} options={(props) => ({ ...stackScreenOptions("Apple-Products") })} />
+                <Stack.Screen name={SCREENS.ViewProduct} component={ViewProduct} options={(props) => ({ ...stackScreenOptions('More-Info') })} />
             </Stack.Navigator >
         </NavigationContainer >
     );
