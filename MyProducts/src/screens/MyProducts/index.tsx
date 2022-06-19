@@ -39,6 +39,7 @@ const MyProducts = ({ }) => {
 
     const onSearchClear = useCallback(() => {
         setSearchValue('')
+        dispatch(clearProductsLength())
         getProducts(dispatch);
     }, [searchValue])
 
