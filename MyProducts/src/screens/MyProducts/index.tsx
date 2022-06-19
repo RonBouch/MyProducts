@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../../utilities/ApiServices';
@@ -34,7 +34,7 @@ const MyProducts = ({ }) => {
         }
     }
 
-    const handleChangeText = (e: string) => {
+    const handleChangeText = useCallback((e: string) => {
         setSearchValue(e)
         if (e.length > 2) {
             const newData = products.slice().filter(ptoduct => ptoduct.productName.toUpperCase().includes(e.toUpperCase()))
@@ -43,18 +43,18 @@ const MyProducts = ({ }) => {
             setDataAfterFilter(products);
 
         }
-    }
+    }, [searchValue])
 
-    const onSearchClear = () => {
+    const onSearchClear = useCallback(() => {
         setDataAfterFilter(products);
         setSearchValue('')
-    }
+    }, [searchValue])
 
     return (
         <View style={styles.container}>
             <Search
                 value={searchValue}
-                onChange={(e) => handleChangeText(e)}
+                onChange={handleChangeText}
                 onSearchClear={onSearchClear}
             />
             <FlatList

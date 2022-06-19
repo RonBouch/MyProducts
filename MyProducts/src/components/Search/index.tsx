@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 import {
     Platform, StyleSheet, TextInput, TouchableOpacity, useWindowDimensions,
     Animated, Easing
@@ -169,4 +169,4 @@ Search.defaultProps = {
     theme: 'LIGHT'
 }
 
-export default Search;
+export default memo(Search);
